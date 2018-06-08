@@ -16,17 +16,43 @@ import java.util.Map;
  */
 public class JarParser {
     private List<JarData> data;
-    private HashMap<String,Integer> duplicates;
+    private Map<String,Integer> duplicates;
 
     public JarParser() {
         data=new ArrayList<JarData>();
-        duplicates=new HashMap<String,Integer>();
+        duplicates=null;
     }
+
+    public List<JarData> getData() {
+        return data;
+    }
+    
     
     public void addData(JarData jar){
         data.add(jar);
     }
     
+    public void findDuplicates(){
+        duplicates=new HashMap<String,Integer>();
+        for(JarData jar:data){
+            if(!jar.getPath().endsWith("/")){
+                String className=jar.getPath().substring(jar.getPath().lastIndexOf("/")+1);
+                if(className!=null){
+                    if(duplicates.containsKey(className)){
+                        int count=duplicates.get(className);
+                        duplicates.put(className, count+1);
+                    }else
+                        duplicates.put(className,1);
+                }
+            }
+        }
+    }
     
+    public Map<String,Integer> getDuplicates(){
+        if(duplicates==null){
+            findDuplicates();
+        }
+        return duplicates;
+    }
     
 }

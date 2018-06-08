@@ -26,7 +26,7 @@
             <h1>ZIP Upload</h1>
             <form method="post" action="zipaction" enctype="multipart/form-data">
                 <label>Upload the Zip file</label><br><br>
-                <input type="file" name="file"/>
+                <input type="file" name="file" required/>
                 <input type="submit" value="Submit"/>
             </form>
         </div>
@@ -34,7 +34,7 @@
             <h1>Upload the folder</h1>
             <form method="post" action="folderaction" enctype="multipart/form-data">
                 <label>Select the folder</label><br><br>
-                <input type="file" name="folder"  webkitdirectory directory/>
+                <input type="file" name="folder" required webkitdirectory directory/>
                 <input type="submit" value="Submit folder"/>
             </form>
         </div>
@@ -42,7 +42,7 @@
             <h1>Through URL</h1>
             <form method="post" action="urlaction">
                 <label>Provide the URL:</label><br><br>
-                <input type="url" name="link"/>
+                <input type="url" name="link" required/>
                 <input type="submit" value="Submit"/>
             </form>
         </div>

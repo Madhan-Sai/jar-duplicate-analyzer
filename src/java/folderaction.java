@@ -67,7 +67,7 @@ public class folderaction extends HttpServlet {
                 File dest=new File(filepath);
                 if(!dest.exists())
                     dest.mkdirs();
-                JarData djar=null;
+                
                 df.setRepository(tempdir);
                 ServletFileUpload sfup=new ServletFileUpload(df);
                 try {
@@ -90,14 +90,15 @@ public class folderaction extends HttpServlet {
                             JarFile jar=new JarFile(fpath);
                             Enumeration<JarEntry> enu=jar.entries();
                             while(enu.hasMoreElements()){
+                                JarData djar=null;
                                 JarEntry jarContent=enu.nextElement();
                                 djar=new JarData(jarContent.getName(),jarContent.getSize(),new Date(jarContent.getTime()));
                                 jardata.addData(djar);
                             }
                         }
                     }
-                    if(djar!=null){
-                        request.getSession().setAttribute("jardata", djar);
+                    if(jardata!=null){
+                        request.getSession().setAttribute("jardata", jardata);
                         response.sendRedirect("listing.jsp");
                     }else{
                         HttpSession session=request.getSession();

@@ -4,6 +4,10 @@
     Author     : Administrator
 --%>
 
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
+<%@page import="JarAnalyzer.JarData"%>
+<%@page import="JarAnalyzer.JarParser"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -12,6 +16,16 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <% 
+            JarParser jardata= (JarParser) request.getSession().getAttribute("jardata");
+            /*for(JarData data:jardata.getData()){
+                out.println("<p>"+data.getPath()+"\t"+data.getFileSize()+"</p>");
+            }*/
+            out.println("<h1>Duplicates</h1>");
+            for(Map.Entry<String,Integer> en : jardata.getDuplicates().entrySet() ){
+                if(en.getValue()>1)
+                    out.println("<p>"+en.getKey()+"\t"+en.getValue()+"</p>");
+            }
+        %>
     </body>
 </html>
