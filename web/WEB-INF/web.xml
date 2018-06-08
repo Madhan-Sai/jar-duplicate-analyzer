@@ -12,6 +12,13 @@
         <servlet-name>urlaction</servlet-name>
         <servlet-class>urlaction</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DoOnstartup</servlet-name>
+        <servlet-class>DoOnstartup</servlet-class>
+    </servlet>
+    <listener>
+        <listener-class>DoOnstartup</listener-class>
+    </listener>
     <servlet-mapping>
         <servlet-name>folderaction</servlet-name>
         <url-pattern>/folderaction</url-pattern>
@@ -23,6 +30,10 @@
     <servlet-mapping>
         <servlet-name>urlaction</servlet-name>
         <url-pattern>/urlaction</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DoOnstartup</servlet-name>
+        <url-pattern>/DoOnstartup</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

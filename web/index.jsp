@@ -26,7 +26,7 @@
             <h1>ZIP Upload</h1>
             <form method="post" action="zipaction" enctype="multipart/form-data">
                 <label>Upload the Zip file</label><br><br>
-                <input type="file" name="file" required/>
+                <input type="file" name="file" accept=".zip" required/>
                 <input type="submit" value="Submit"/>
             </form>
         </div>

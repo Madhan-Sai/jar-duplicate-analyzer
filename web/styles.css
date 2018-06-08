@@ -13,3 +13,11 @@ and open the template in the editor.
     display:none;
     align-self: center;
 }
+table, td, th{
+    border: 1px solid black;
+}
+.cmds{
+    width:40%;
+    border: none;
+    background: none;
+}
