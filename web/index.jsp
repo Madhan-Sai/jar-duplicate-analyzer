@@ -27,7 +27,7 @@
             <form method="post" action="zipaction" enctype="multipart/form-data">
                 <label>Upload the Zip file</label><br><br>
                 <input type="file" name="file"/>
-                <input type="submit" value="Submit folder"/>
+                <input type="submit" value="Submit"/>
             </form>
         </div>
         <div class="input" id="folderform">
@@ -43,7 +43,7 @@
             <form method="post" action="urlaction">
                 <label>Provide the URL:</label><br><br>
                 <input type="url" name="link"/>
-                <input type="submit" value="Submit folder"/>
+                <input type="submit" value="Submit"/>
             </form>
         </div>
         <% request.getSession().removeAttribute("error"); %>
