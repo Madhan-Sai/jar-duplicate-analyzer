@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 
+import JarAnalyzer.JarData;
+import JarAnalyzer.JarParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -49,6 +51,7 @@ public class folderaction extends HttpServlet {
             out.println("<title>Servlet folderaction</title>");            
             out.println("</head>");
             out.println("<body>");
+            JarParser jardata=new JarParser();
             ServletContext sc=this.getServletContext();
             String filepath = sc.getInitParameter("destLocation");
             String fpath="";
@@ -84,13 +87,16 @@ public class folderaction extends HttpServlet {
                             f=new File(fpath);
                             f.getParentFile().mkdirs();
                             fi.write(f);
-                            
+                            JarData djar=null;
                             JarFile jar=new JarFile(fpath);
                             Enumeration<JarEntry> enu=jar.entries();
                             while(enu.hasMoreElements()){
                                 JarEntry jarContent=enu.nextElement();
-                                out.println("<p>"+jarContent.getName()+"\t"+jarContent.getSize()+"\t"+new Date(jarContent.getTime())+"</p>");
-                            }          
+                                djar=new JarData(jarContent.getName(),jarContent.getSize(),new Date(jarContent.getTime()));
+                                jardata.addData(djar);
+                            }
+                            request.getSession().setAttribute("jardata", djar);
+                            response.sendRedirect("listing.jsp");
                         }
                     }
                 }catch(Exception e){
