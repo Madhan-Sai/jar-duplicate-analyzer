@@ -20,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -66,7 +67,7 @@ public class folderaction extends HttpServlet {
                 File dest=new File(filepath);
                 if(!dest.exists())
                     dest.mkdirs();
-                
+                JarData djar=null;
                 df.setRepository(tempdir);
                 ServletFileUpload sfup=new ServletFileUpload(df);
                 try {
@@ -77,7 +78,6 @@ public class folderaction extends HttpServlet {
                         String fieldName=fi.getFieldName();
                         String name=fi.getName();
                         name.replace("/","\\");
-                        out.println("<h1>"+name+"</h1>");
                         if(name.endsWith(".jar")){
                             if(name.lastIndexOf("//")>=0){
                                 fpath=filepath+name.substring(name.lastIndexOf("//"));
@@ -87,7 +87,6 @@ public class folderaction extends HttpServlet {
                             f=new File(fpath);
                             f.getParentFile().mkdirs();
                             fi.write(f);
-                            JarData djar=null;
                             JarFile jar=new JarFile(fpath);
                             Enumeration<JarEntry> enu=jar.entries();
                             while(enu.hasMoreElements()){
@@ -95,10 +94,17 @@ public class folderaction extends HttpServlet {
                                 djar=new JarData(jarContent.getName(),jarContent.getSize(),new Date(jarContent.getTime()));
                                 jardata.addData(djar);
                             }
-                            request.getSession().setAttribute("jardata", djar);
-                            response.sendRedirect("listing.jsp");
                         }
                     }
+                    if(djar!=null){
+                        request.getSession().setAttribute("jardata", djar);
+                        response.sendRedirect("listing.jsp");
+                    }else{
+                        HttpSession session=request.getSession();
+                        session.setAttribute("error", "This folder doesn't have any jar files");
+                        response.sendRedirect("index.jsp");
+                    }
+                    return;
                 }catch(Exception e){
                     e.printStackTrace();
                 }
