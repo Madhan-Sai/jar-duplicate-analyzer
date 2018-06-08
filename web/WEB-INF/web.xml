@@ -4,9 +4,25 @@
         <servlet-name>folderaction</servlet-name>
         <servlet-class>folderaction</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>zipaction</servlet-name>
+        <servlet-class>zipaction</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>urlaction</servlet-name>
+        <servlet-class>urlaction</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>folderaction</servlet-name>
         <url-pattern>/folderaction</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>zipaction</servlet-name>
+        <url-pattern>/zipaction</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>urlaction</servlet-name>
+        <url-pattern>/urlaction</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

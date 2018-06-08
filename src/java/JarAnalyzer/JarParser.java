@@ -37,7 +37,7 @@ public class JarParser {
         for(JarData jar:data){
             if(!jar.getPath().endsWith("/")){
                 String className=jar.getPath().substring(jar.getPath().lastIndexOf("/")+1);
-                if(className!=null){
+                if(className!=null&&className.endsWith(".class")){
                     if(duplicates.containsKey(className)){
                         int count=duplicates.get(className);
                         duplicates.put(className, count+1);
