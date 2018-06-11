@@ -17,10 +17,7 @@ table, td, th{
     border: 1px solid black;
 }
 .cmds{
-    width:400px;
+    width:100%;
     border: none;
     background: none;
 }
-
-.float-left{ width: 50%; float: left;}
-.float-right{ width: 50%; float: right;}

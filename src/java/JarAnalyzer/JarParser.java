@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class JarParser {
     private List<JarData> data;
-    private Map<String,Integer> duplicates;
+    private Map<String,ArrayList> duplicates;
     private Map<String,ArrayList> anonymous;
     private Map<String,ArrayList> folders;
 
@@ -37,16 +37,20 @@ public class JarParser {
     }
     
     public void findDuplicates(){
-        duplicates=new HashMap<String,Integer>();
+        duplicates=new HashMap<String,ArrayList>();
         for(JarData jar:data){
             if(!jar.getPath().endsWith("/")){
                 String className=jar.getPath().substring(jar.getPath().lastIndexOf("/")+1);
                 if(className!=null&&className.endsWith(".class")){
                     if(duplicates.containsKey(className)){
-                        int count=duplicates.get(className);
-                        duplicates.put(className, count+1);
-                    }else
-                        duplicates.put(className,1);
+                        ArrayList<String> count=duplicates.get(className);
+                        count.add(jar.getPath());
+                        duplicates.put(className, count);
+                    }else{
+                        ArrayList<String> c=new ArrayList<>();
+                        c.add(jar.getPath());
+                        duplicates.put(className,c);
+                    }
                 }
             }
         }
@@ -76,7 +80,7 @@ public class JarParser {
         }
     }
     
-    public Map<String,Integer> getDuplicates(){
+    public Map<String,ArrayList> getDuplicates(){
         if(duplicates==null){
             findDuplicates();
         }
@@ -108,13 +112,29 @@ public class JarParser {
         }
     }
     
-    public List<String> getAnonymousDetail(String key){
-        return anonymous.get(key);
+    public Map<String,Integer> getAnonymousDetail(String key){
+        List <String> lis=anonymous.get(key);
+        Map<String,Integer> anonym=new HashMap<String,Integer>();
+        for(String li:lis){
+            if(anonym.containsKey(li)){
+                int k=anonym.get(li);
+                anonym.put(li, k+1);
+            }else{
+                anonym.put(li, 1);
+            }
+        }
+        return anonym;
     }
     
-        public Map<String,ArrayList> getFolders(){
-        //if(folders==null)
-            //addFolders();
+    public Map<String,ArrayList> getFolders(){
         return folders;
+    }
+    
+    public List<String> getDuplicatesPath(String path){
+        return duplicates.get(path);
+    }
+    
+    public List<String> getFolderFiles(String fname){
+        return folders.get(fname);
     }
 }

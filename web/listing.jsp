@@ -21,6 +21,8 @@
         <script>
             function goto(id,btn,cmd){
                 ele=document.getElementById(id);
+                if(cmd==="Unknown")
+                    cmd="";
                 ele.value=cmd;
                 document.getElementById(btn).click();
             }
@@ -28,41 +30,55 @@
         <link href="styles.css" rel="stylesheet"/>
         <% 
             JarParser jardata= (JarParser) request.getSession().getAttribute("jardata");
-            /*for(JarData data:jardata.getData()){
-                out.println("<p>"+data.getPath()+"\t"+data.getFileSize()+"</p>");
-            }*/
-            out.println("<div >");
-            out.println("<h1>Folder Listing</h1>");
-            out.println("<table class='float-left'>");
+            String path;
+            out.println("<h1>Folders Available</h1>");
+            out.println("<table>");
             out.println("<tr><th>Path</th><th>Count</th></tr>");
             for(Map.Entry<String,ArrayList> en: jardata.getFolders().entrySet()){
-                    out.println("<tr>\n<td><button onclick=\"goto('folder','submitfolder','"+en.getKey()+"')\" class='cmds'>"+en.getKey()+"</button></td>\n"
+                path=en.getKey();
+                if(en.getKey().equals("")){
+                    path="Unknown";
+                }
+                out.println("<tr>\n<td><button onclick=\"goto('folder','submitfold','"+path+"')\" class='cmds'>"+path+"</button></td>\n"
                             + "<td>"+en.getValue().size()+"</td>\n</tr>");
+                
             }
             out.println("</table>");
-            out.println("</div>");
             
-            out.println("<div >");
-            out.println("<h1>Duplicates</h1>");
-            out.println("<table class='float-right'>");
-            out.println("<tr><th>Class file</th><th>Count</th></tr>");
-            for(Map.Entry<String,Integer> en : jardata.getDuplicates().entrySet() ){
-                if(en.getValue()>1)
-                    out.println("<tr>\n<td><button onclick=\"goto('duplicate','submitdup','"+en.getKey()+"')\" class='cmds'>"+en.getKey()+"</button></td>\n"
-                            + "<td>"+en.getValue()+"</td>\n</tr>");
+            out.println("<h1>Duplicate classes</h1>");
+            boolean isDup=false;
+            for(Map.Entry<String,ArrayList> en : jardata.getDuplicates().entrySet() ){
+                if(en.getValue().size()>1){
+                    isDup=true;
+                    break;
+                }
             }
-            out.println("</table>");
-            out.println("</div>");
-            
-            out.println("<h1>Anonymous</h1>");
+            if(isDup){
             out.println("<table>");
             out.println("<tr><th>Class file</th><th>Count</th></tr>");
-            for(Map.Entry<String,ArrayList> en : jardata.getAnonymous().entrySet() ){
-                if(en.getValue().size()>0)
-                    out.println("<tr>\n<td><button onclick=\"goto('anonymous','submitano','"+en.getKey()+"')\" class='cmds'>"+en.getKey()+"</button></td>\n"
+            for(Map.Entry<String,ArrayList> en : jardata.getDuplicates().entrySet() ){
+                if(en.getValue().size()>1)
+                    out.println("<tr>\n<td><button onclick=\"goto('duplicate','submitdup','"+en.getKey()+"')\" class='cmds'>"+en.getKey()+"</button></td>\n"
                             + "<td>"+en.getValue().size()+"</td>\n</tr>");
             }
             out.println("</table>");
+            }else{
+                out.println("<p> No Duplicate classes found </p>");
+            }
+            
+            out.println("<h1>Anonymous classes</h1>");
+            if(!jardata.getAnonymous().isEmpty()){
+                out.println("<table>");
+                out.println("<tr><th>Class file</th><th>Count</th></tr>");
+                for(Map.Entry<String,ArrayList> en : jardata.getAnonymous().entrySet() ){
+                    if(en.getValue().size()>0)
+                        out.println("<tr>\n<td><button onclick=\"goto('anonymous','submitano','"+en.getKey()+"')\" class='cmds'>"+en.getKey()+"</button></td>\n"
+                                + "<td>"+en.getValue().size()+"</td>\n</tr>");
+                }
+                out.println("</table>");
+            }else{
+                out.println("<p> No anonymous classes found </p>");
+            }
         %>
         <form method="post" action="result.jsp">
             <input type="text" name="duplicate" id="duplicate" hidden/>
@@ -71,6 +87,10 @@
         <form method="post" action="result.jsp">
             <input type="text" name="anonymous" id="anonymous" hidden/>
             <input type="submit" id="submitano" hidden/>
+        </form>
+        <form method="post" action="result.jsp">
+            <input type="text" name="folder" id="folder" hidden/>
+            <input type="submit" id="submitfold" hidden/>
         </form>
     </body>
 </html>
