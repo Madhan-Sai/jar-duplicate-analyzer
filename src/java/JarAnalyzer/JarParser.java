@@ -17,10 +17,12 @@ import java.util.Map;
 public class JarParser {
     private List<JarData> data;
     private Map<String,Integer> duplicates;
+    private Map<String,ArrayList> anonymous;
 
     public JarParser() {
         data=new ArrayList<JarData>();
         duplicates=null;
+        anonymous=null;
     }
 
     public List<JarData> getData() {
@@ -48,6 +50,30 @@ public class JarParser {
         }
     }
     
+    public void findAnonymous(){
+        anonymous=new HashMap<String,ArrayList>();
+        for(JarData jar:data){
+            if(!jar.getPath().endsWith("/")){
+                String className=jar.getPath().substring(jar.getPath().lastIndexOf("/")+1);
+                if(className!=null && className.endsWith(".class")){
+                    if(className.contains("$")){
+                        String mainClass=className.substring(0,className.indexOf("$"));
+                        String anonymousClass=className.substring(className.indexOf("$"));
+                        if(anonymous.containsKey(mainClass)){
+                            ArrayList li=anonymous.get(mainClass);
+                            li.add(anonymousClass);
+                            anonymous.put(mainClass, li);
+                        }else{
+                            ArrayList li=new ArrayList();
+                            li.add(anonymousClass);
+                            anonymous.put(mainClass,li);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     public Map<String,Integer> getDuplicates(){
         if(duplicates==null){
             findDuplicates();
@@ -55,4 +81,9 @@ public class JarParser {
         return duplicates;
     }
     
+    public Map<String,ArrayList> getAnonymous(){
+        if(anonymous==null)
+            findAnonymous();
+        return anonymous;
+    }
 }

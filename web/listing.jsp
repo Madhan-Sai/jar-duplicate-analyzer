@@ -4,6 +4,7 @@
     Author     : Administrator
 --%>
 
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="JarAnalyzer.JarData"%>
@@ -30,6 +31,16 @@
                 if(en.getValue()>1)
                     out.println("<tr>\n<td><button class='cmds' >"+en.getKey()+"</button></td>\n"
                             + "<td>"+en.getValue()+"</td>\n</tr>");
+            }
+            out.println("</table>");
+            
+            out.println("<h1>Anonymous</h1>");
+            out.println("<table>");
+            out.println("<tr><th>Class file</th><th>Count</th></tr>");
+            for(Map.Entry<String,ArrayList> en : jardata.getAnonymous().entrySet() ){
+                if(en.getValue().size()>0)
+                    out.println("<tr>\n<td><button class='cmds' >"+en.getKey()+"</button></td>\n"
+                            + "<td>"+en.getValue().size()+"</td>\n</tr>");
             }
             out.println("</table>");
         %>
