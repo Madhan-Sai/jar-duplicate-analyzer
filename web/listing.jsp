@@ -4,6 +4,8 @@
     Author     : Administrator
 --%>
 
+<%@page import="java.io.FileWriter"%>
+<%@page import="java.io.File"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
@@ -30,11 +32,13 @@
         <link href="styles.css" rel="stylesheet"/>
         <% 
             JarParser jardata= (JarParser) request.getSession().getAttribute("jardata");
-            String path;
-            out.println("<h1>Folders Available</h1>");
+            String path; %>
+            <div style="float: left; padding-right: 1%;">
+            <%out.println("<h1>Folders Available</h1>");
+            out.println("<a href=\"Json files/.json"+"\" style='top:60px;' download>Download JSON file</a><br><br>");
             out.println("<table>");
-            out.println("<tr><th>Path</th><th>Count</th></tr>");
-            for(Map.Entry<String,ArrayList> en: jardata.getFolders().entrySet()){
+            out.println("<tr><th>Path</th><th>No. of files</th></tr>");
+            for(Map.Entry<String,Map<String,Integer>> en: jardata.getFolders().entrySet()){
                 path=en.getKey();
                 if(en.getKey().equals("")){
                     path="Unknown";
@@ -43,11 +47,13 @@
                             + "<td>"+en.getValue().size()+"</td>\n</tr>");
                 
             }
-            out.println("</table>");
-            
-            out.println("<h1>Duplicate classes</h1>");
+            out.println("</table>");%>
+            </div>
+            <div style="float: left; padding-right: 1%;">
+            <% out.println("<h1>Duplicate classes</h1>");
+            out.println("<a href=\"Json files/.json"+"\" style='top:60px;' download>Download JSON file</a><br><br>");
             boolean isDup=false;
-            for(Map.Entry<String,ArrayList> en : jardata.getDuplicates().entrySet() ){
+            for(Map.Entry<String,ArrayList<JarData>> en : jardata.getDuplicates().entrySet() ){
                 if(en.getValue().size()>1){
                     isDup=true;
                     break;
@@ -55,8 +61,8 @@
             }
             if(isDup){
             out.println("<table>");
-            out.println("<tr><th>Class file</th><th>Count</th></tr>");
-            for(Map.Entry<String,ArrayList> en : jardata.getDuplicates().entrySet() ){
+            out.println("<tr><th>Class file</th><th>No. of times repeated</th></tr>");
+            for(Map.Entry<String,ArrayList<JarData>> en : jardata.getDuplicates().entrySet() ){
                 if(en.getValue().size()>1)
                     out.println("<tr>\n<td><button onclick=\"goto('duplicate','submitdup','"+en.getKey()+"')\" class='cmds'>"+en.getKey()+"</button></td>\n"
                             + "<td>"+en.getValue().size()+"</td>\n</tr>");
@@ -64,13 +70,16 @@
             out.println("</table>");
             }else{
                 out.println("<p> No Duplicate classes found </p>");
-            }
-            
+            }%>
+            </div>
+            <div style="float: left;">
+            <%
             out.println("<h1>Anonymous classes</h1>");
             if(!jardata.getAnonymous().isEmpty()){
                 out.println("<table>");
-                out.println("<tr><th>Class file</th><th>Count</th></tr>");
-                for(Map.Entry<String,ArrayList> en : jardata.getAnonymous().entrySet() ){
+                out.println("<tr><th>Class file</th><th>No. of anonymous classes</th></tr>");
+                out.println("<a href=\"Json files/.json"+"\" style='top:60px;' download>Download JSON file</a><br><br>");
+                for(Map.Entry<String,Map<String,Integer>> en : jardata.getAnonymous().entrySet() ){
                     if(en.getValue().size()>0)
                         out.println("<tr>\n<td><button onclick=\"goto('anonymous','submitano','"+en.getKey()+"')\" class='cmds'>"+en.getKey()+"</button></td>\n"
                                 + "<td>"+en.getValue().size()+"</td>\n</tr>");
@@ -80,6 +89,7 @@
                 out.println("<p> No anonymous classes found </p>");
             }
         %>
+            </div>
         <form method="post" action="result.jsp">
             <input type="text" name="duplicate" id="duplicate" hidden/>
             <input type="submit" id="submitdup" hidden/>

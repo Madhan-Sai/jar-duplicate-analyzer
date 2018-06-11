@@ -45,4 +45,9 @@
         <param-name>destLocation</param-name>
         <param-value>\webapps\JARAnalyzer\uploads\</param-value>
     </context-param>
+    <context-param>
+        <description>Location where uploaded json files to be stored</description>
+        <param-name>JsonLocation</param-name>
+        <param-value>\webapps\JARAnalyzer\JSON files\</param-value>
+    </context-param>
 </web-app>
