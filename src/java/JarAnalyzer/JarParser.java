@@ -18,11 +18,13 @@ public class JarParser {
     private List<JarData> data;
     private Map<String,Integer> duplicates;
     private Map<String,ArrayList> anonymous;
+    private Map<String,ArrayList> folders;
 
     public JarParser() {
         data=new ArrayList<JarData>();
         duplicates=null;
         anonymous=null;
+        folders=new HashMap<String,ArrayList>();
     }
 
     public List<JarData> getData() {
@@ -58,7 +60,7 @@ public class JarParser {
                 if(className!=null && className.endsWith(".class")){
                     if(className.contains("$")){
                         String mainClass=className.substring(0,className.indexOf("$"));
-                        String anonymousClass=className.substring(className.indexOf("$"));
+                        String anonymousClass=className.substring(className.indexOf("$")+1,className.lastIndexOf(".class"));
                         if(anonymous.containsKey(mainClass)){
                             ArrayList li=anonymous.get(mainClass);
                             li.add(anonymousClass);
@@ -85,5 +87,34 @@ public class JarParser {
         if(anonymous==null)
             findAnonymous();
         return anonymous;
+    }
+    
+    public void addFolders(JarData jar){
+        ArrayList<String>fol=new ArrayList<String>();
+        if(! jar.path.substring(jar.path.lastIndexOf("/")+1).equals("")){
+            String jpath=jar.path.substring(0,jar.path.lastIndexOf("/")+1);
+            String fname=jar.path.substring(jpath.lastIndexOf("/")+1);
+            if(jpath!=null){
+            if(folders.containsKey(jpath)){
+                fol=folders.get(jpath);
+                fol.add(fname);
+                folders.put(jpath, fol);
+            }
+            else{
+                fol.add(fname);
+                folders.put(jpath, fol);
+            }
+            }
+        }
+    }
+    
+    public List<String> getAnonymousDetail(String key){
+        return anonymous.get(key);
+    }
+    
+        public Map<String,ArrayList> getFolders(){
+        //if(folders==null)
+            //addFolders();
+        return folders;
     }
 }

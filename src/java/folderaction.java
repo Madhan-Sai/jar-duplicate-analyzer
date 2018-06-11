@@ -94,6 +94,7 @@ public class folderaction extends HttpServlet {
                                 JarEntry jarContent=enu.nextElement();
                                 djar=new JarData(jarContent.getName(),jarContent.getSize(),new Date(jarContent.getTime()));
                                 jardata.addData(djar);
+                                jardata.addFolders(djar);
                             }
                         }
                     }

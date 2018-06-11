@@ -197,6 +197,7 @@ public class zipaction extends HttpServlet {
                         JarEntry content=jarentries.nextElement();
                         djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()));
                         parse.addData(djar);
+                        parse.addFolders(djar);
                     }
                     
                      fos.close();
