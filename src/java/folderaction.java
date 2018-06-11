@@ -9,6 +9,7 @@ import JarAnalyzer.JarParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -57,7 +58,7 @@ public class folderaction extends HttpServlet {
             String filepath = sc.getInitParameter("destLocation");
             String fpath="";
             String dirp=System.getProperty("user.dir");
-            filepath=dirp+filepath;
+            filepath=dirp+filepath+new SecureRandom().nextInt()+"\\";
             String type=request.getContentType();
             if(type.contains("multipart/form-data")){
                 DiskFileItemFactory df=new DiskFileItemFactory();

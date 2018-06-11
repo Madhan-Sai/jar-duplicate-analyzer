@@ -38,11 +38,15 @@ public class DoOnstartup implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext sc=sce.getServletContext();
         String filepath = sc.getInitParameter("destLocation");
+        String filep = sc.getInitParameter("JsonLocation");
         String dirp=System.getProperty("user.dir");
         filepath=dirp+filepath;
+        filep=dirp+filep;
         File f=new File(filepath);
+        File fp=new File(filep);
         try {
             FileUtils.deleteDirectory(f);
+            FileUtils.deleteDirectory(fp);
         } catch (IOException ex) {
             Logger.getLogger(DoOnstartup.class.getName()).log(Level.SEVERE, null, ex);
         }

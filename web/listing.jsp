@@ -47,7 +47,7 @@
             JSONArray arr=new JSONArray();
             String filename=nfilepath+"folders.json";
             out.println("<h1>Folders Available</h1>");
-            out.println("<a href=\"JSON files/folders.json"+"\" style='top:60px;' download>Download JSON file</a><br><br>");
+            out.println("<a href=\"JSON files/folders.json\" style='top:60px;' download>Download JSON file</a><br><br>");
             out.println("<table>");
             out.println("<tr><th>Path</th><th>No. of files</th></tr>");
             for(Map.Entry<String,Map<String,Integer>> en: jardata.getFolders().entrySet()){
@@ -74,7 +74,7 @@
             arr.clear();
             filename=nfilepath+"duplicates.json";
             out.println("<h1>Duplicate classes</h1>");
-            out.println("<a href=\"JSON files/duplicates.json"+"\" style='top:60px;' download>Download JSON file</a><br><br>");
+            out.println("<a href=\"JSON files/duplicates.json\" style='top:60px;' download>Download JSON file</a><br><br>");
             boolean isDup=false;
             for(Map.Entry<String,ArrayList<JarData>> en : jardata.getDuplicates().entrySet() ){
                 if(en.getValue().size()>1){
@@ -113,7 +113,7 @@
                 filename=nfilepath+"anonymous.json";
                 out.println("<table>");
                 out.println("<tr><th>Class file</th><th>No. of anonymous classes</th></tr>");
-                out.println("<a href=\"JSON files/anonymous.json"+"\" style='top:60px;' download>Download JSON file</a><br><br>");
+                out.println("<a href=\"JSON files/anonymous.json\" style='top:60px;' download>Download JSON file</a><br><br>");
                 for(Map.Entry<String,Map<String,Integer>> en : jardata.getAnonymous().entrySet() ){
                     if(en.getValue().size()>0){
                         JSONObject inner=new JSONObject();

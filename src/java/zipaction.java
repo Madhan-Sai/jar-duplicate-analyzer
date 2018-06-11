@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -67,7 +68,7 @@ public class zipaction extends HttpServlet {
             ServletContext sc=this.getServletContext();//gets servlets contexts
             String fpath=sc.getInitParameter("destLocation");//takes value of the parameter name(deployment descriptor)
             String dirpath=System.getProperty("user.dir");//current server directory
-            fpath=dirpath+fpath;//appends directory path with file path
+            fpath=dirpath+fpath+new SecureRandom().nextInt()+"\\";//appends directory path with file path
             out.println(fpath);
             String type=request.getContentType();//identifies the encryption type of the form
             if(type.contains("multipart/form-data")){

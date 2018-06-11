@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
@@ -60,7 +61,7 @@ public class urlaction extends HttpServlet {
             ServletContext sc=this.getServletContext();
             String fpath=sc.getInitParameter("destLocation");
             String dirpath=System.getProperty("user.dir");
-            fpath=dirpath+fpath+filename;
+            fpath=dirpath+fpath+new SecureRandom().nextInt()+"\\"+filename;
             File f=new File(fpath);
             FileUtils.copyURLToFile(url,f);
             //out.println("<p>"+link+"</p>");
