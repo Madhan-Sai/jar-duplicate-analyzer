@@ -177,4 +177,20 @@ public class JarParser {
         }
         return anofiles;
     }
+    
+    public JSONObject returnDuplicates(String RClass){
+        JSONObject dupfile=new JSONObject();
+        List<JarData> dup=new ArrayList<JarData>();
+        JSONArray duparray=new JSONArray();
+        dup=duplicates.get(RClass);
+        for(JarData jar:dup){
+            JSONObject inobj=new JSONObject();
+            inobj.put("FilePath",jar.fileSize);
+            inobj.put("Last Modified Date:",jar.lastModified);
+            inobj.put("Size",jar.fileSize);
+            duparray.add(inobj);
+        }
+        dupfile.put("Duplicate Class  --  Count",duparray);
+        return dupfile;
+    }
 }

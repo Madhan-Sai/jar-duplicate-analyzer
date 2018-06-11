@@ -32,8 +32,8 @@
                 fname="folder-"+request.getParameter("folder").hashCode();
             }else if(request.getParameter("anonymous")!=null){
                 fname=request.getParameter("anonymous");
-            }else if(request.getParameter("duplicates")!=null){
-                fname=request.getParameter("duplicates");
+            }else if(request.getParameter("duplicate")!=null){
+                fname=request.getParameter("duplicate");
             }
             String filename=nfilepath+fname+".json";
             filename.replace("/", "//");
@@ -42,8 +42,8 @@
                 file.write(jardata.returnFolders(request.getParameter("folder")).toJSONString());
             else if(request.getParameter("anonymous")!=null)
                 file.write(jardata.returnAnonymous(request.getParameter("anonymous")).toJSONString());
-            else if(request.getParameter("duplicates")!=null)
-                file.write(jardata.returnAnonymous(request.getParameter("duplicates")).toJSONString());
+            else if(request.getParameter("duplicate")!=null)
+                file.write(jardata.returnDuplicates(request.getParameter("duplicate")).toJSONString());
             file.close();
             if(request.getParameter("duplicate")!=null){
                 List<JarData> list=jardata.getDuplicatesPath(request.getParameter("duplicate"));
