@@ -33,7 +33,7 @@
             }else if(request.getParameter("anonymous")!=null){
                 fname=request.getParameter("anonymous");
             }else if(request.getParameter("duplicate")!=null){
-                fname=request.getParameter("duplicate");
+                fname="duplicate"+request.getParameter("duplicate").hashCode();
             }
             String filename=nfilepath+fname+".json";
             filename.replace("/", "//");
@@ -49,9 +49,9 @@
                 List<JarData> list=jardata.getDuplicatesPath(request.getParameter("duplicate"));
                 out.println("<h1>Path of duplicate class "+request.getParameter("duplicate")+" are:</h1>");
                 out.println("<table>");
-                out.println("<tr><th>Path</th><th>Last Modified Date</th><th>File size in Bytes</th></tr>");
+                out.println("<tr><th>File name</th><th>Path</th><th>Last Modified Date</th><th>File size in Bytes</th></tr>");
                 for(JarData path:list){
-                    out.println("<tr>\n<td>"+path.getPath()+"</td>\n<td>"+path.getLastModified()+"</td>\n<td>"+path.getFileSize()+"</td>\n</tr>");
+                    out.println("<tr>\n<td>"+path.getFilename()+"</td>\n<td>"+path.getPath()+"</td>\n<td>"+path.getLastModified()+"</td>\n<td>"+path.getFileSize()+"</td>\n</tr>");
                 }
                 out.println("</table>");
             }else if(request.getParameter("anonymous")!=null){

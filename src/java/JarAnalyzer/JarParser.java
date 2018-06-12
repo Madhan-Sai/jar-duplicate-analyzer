@@ -44,14 +44,14 @@ public class JarParser {
             if(!jar.getPath().endsWith("/")){
                 String className=jar.getPath().substring(jar.getPath().lastIndexOf("/")+1);
                 if(className!=null&&className.endsWith(".class")){
-                    if(duplicates.containsKey(className)){
-                        ArrayList<JarData> count=duplicates.get(className);
+                    if(duplicates.containsKey(jar.getPath())){
+                        ArrayList<JarData> count=duplicates.get(jar.getPath());
                         count.add(jar);
-                        duplicates.put(className, count);
+                        duplicates.put(jar.getPath(), count);
                     }else{
                         ArrayList<JarData> c=new ArrayList<>();
                         c.add(jar);
-                        duplicates.put(className,c);
+                        duplicates.put(jar.getPath(),c);
                     }
                 }
             }

@@ -136,12 +136,16 @@ public class urlaction extends HttpServlet {
                     while ((len = zis.read(buffer)) > 0) {
                         fos.write(buffer, 0, len);
                     }
-                    JarFile jar=new JarFile(fpath);
+                    JarFile jar=new JarFile(fpath);String jarname;
                     Enumeration<JarEntry> jarentries=jar.entries();
                     while(jarentries.hasMoreElements()){
+                        if(fpath.lastIndexOf("/")!=-1)
+                            jarname=fpath.substring(fpath.lastIndexOf("/"));
+                        else
+                            jarname=fpath;
                         JarData djar=null;
                         JarEntry content=jarentries.nextElement();
-                        djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()));
+                        djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);
                         parse.addData(djar);
                         parse.addFolders(djar);
                     }
@@ -173,12 +177,16 @@ public class urlaction extends HttpServlet {
     }
      private void extractJar(HttpServletRequest request,HttpServletResponse response,String source) throws IOException{
             JarParser parse=new JarParser();
-            JarFile jar=new JarFile(source);
+            JarFile jar=new JarFile(source);String jarname;
             Enumeration<JarEntry> jarentries=jar.entries();
             while(jarentries.hasMoreElements()){
+                if(source.lastIndexOf("/")!=-1)
+                    jarname=source.substring(source.lastIndexOf("/"));
+                else
+                    jarname=source;
                 JarData djar=null;
                 JarEntry content=jarentries.nextElement();
-                djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()));
+                djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);
                 parse.addData(djar);
             }
             if(parse!=null){

@@ -88,12 +88,16 @@ public class folderaction extends HttpServlet {
                             f=new File(fpath);
                             f.getParentFile().mkdirs();
                             fi.write(f);
-                            JarFile jar=new JarFile(fpath);
+                            JarFile jar=new JarFile(fpath);String jarname;
                             Enumeration<JarEntry> enu=jar.entries();
                             while(enu.hasMoreElements()){
+                                if(fpath.lastIndexOf("/")!=-1)
+                                    jarname=fpath.substring(fpath.lastIndexOf("/"));
+                                else
+                                    jarname=fpath;
                                 JarData djar=null;
                                 JarEntry jarContent=enu.nextElement();
-                                djar=new JarData(jarContent.getName(),jarContent.getSize(),new Date(jarContent.getTime()));
+                                djar=new JarData(jarContent.getName(),jarContent.getSize(),new Date(jarContent.getTime()),jarname);
                                 jardata.addData(djar);
                                 jardata.addFolders(djar);
                             }

@@ -15,11 +15,13 @@ public class JarData {
     String path;
     long fileSize;
     Date lastModified;
+    String filename;
 
-    public JarData(String path, long fileSize, Date lastModified) {
+    public JarData(String path, long fileSize, Date lastModified,String filename) {
         this.path = path;
         this.fileSize = fileSize;
         this.lastModified = lastModified;
+        this.filename=filename;
     }
 
     public String getPath() {
@@ -32,6 +34,10 @@ public class JarData {
 
     public Date getLastModified() {
         return lastModified;
+    }
+
+    public String getFilename() {
+        return filename;
     }
     
     

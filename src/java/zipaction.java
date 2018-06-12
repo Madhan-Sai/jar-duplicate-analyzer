@@ -191,12 +191,17 @@ public class zipaction extends HttpServlet {
                     while ((len = zis.read(buffer)) > 0) {
                         fos.write(buffer, 0, len);
                     }
-                    JarFile jar=new JarFile(fpath);
+                    JarFile jar=new JarFile(fpath);String jarname;
                     Enumeration<JarEntry> jarentries=jar.entries();
                     while(jarentries.hasMoreElements()){
+                        if(fpath.contains("/")){
+                            jarname=fpath.substring(fpath.lastIndexOf("/"));
+                        }else{
+                            jarname=fpath;
+                        }
                         JarData djar=null;
                         JarEntry content=jarentries.nextElement();
-                        djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()));
+                        djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);
                         parse.addData(djar);
                         parse.addFolders(djar);
                     }

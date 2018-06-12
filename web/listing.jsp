@@ -22,16 +22,11 @@
     </head>
     <body>
         <script src="scripts.js"></script>
-        <script>
-            function goto(id,btn,cmd){
-                ele=document.getElementById(id);
-                if(cmd==="Unknown")
-                    cmd="";
-                ele.value=cmd;
-                document.getElementById(btn).click();
-            }
-        </script>        
-        <link href="styles.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/redmond/jquery-ui.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.4/css/ui.jqgrid.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.4/jquery.jqgrid.min.js"></script>      
         <% 
             JarParser jardata= (JarParser) request.getSession().getAttribute("jardata");
             String path;
@@ -43,38 +38,30 @@
             if(!dir.exists()) dir.mkdir();%>
             <div style="float: left; padding-right: 1%;">
             <%
-            JSONObject outer=new JSONObject();    
-            JSONArray arr=new JSONArray();
+            JSONObject outerf=new JSONObject();    
+            JSONArray arrf=new JSONArray();
             String filename=nfilepath+"folders.json";
-            out.println("<h1>Folders Available</h1>");
-            out.println("<a href=\"JSON files/folders.json\" style='top:60px;' download>Download JSON file</a><br><br>");
-            out.println("<table>");
-            out.println("<tr><th>Path</th><th>No. of files</th></tr>");
             for(Map.Entry<String,Map<String,Integer>> en: jardata.getFolders().entrySet()){
                 JSONObject inner=new JSONObject();
                 path=en.getKey();
                 if(en.getKey().equals("")){
                     path="Unknown";
                 }
-                out.println("<tr>\n<td><button onclick=\"goto('folder','submitfold','"+path+"')\" class='cmds'>"+path+"</button></td>\n"
-                            + "<td>"+en.getValue().size()+"</td>\n</tr>");
                 inner.put("Path", path);
                 inner.put("No. of Files",en.getValue().size());
-                arr.add(inner);
+                arrf.add(inner);
             }
-            outer.put("Folder Listing", arr);
+            outerf.put("Folder Listing", arrf);
             FileWriter file=new FileWriter(filename);
-            file.write(outer.toJSONString());
+            file.write(outerf.toJSONString());
             file.close();
-            out.println("</table>");%>
+            %>
             </div>
             <div style="float: left; padding-right: 1%;">
             <% 
-            outer.clear();
-            arr.clear();
+            JSONObject outerd=new JSONObject();
+            JSONArray arrd=new JSONArray();
             filename=nfilepath+"duplicates.json";
-            out.println("<h1>Duplicate classes</h1>");
-            out.println("<a href=\"JSON files/duplicates.json\" style='top:60px;' download>Download JSON file</a><br><br>");
             boolean isDup=false;
             for(Map.Entry<String,ArrayList<JarData>> en : jardata.getDuplicates().entrySet() ){
                 if(en.getValue().size()>1){
@@ -83,22 +70,17 @@
                 }
             }
             if(isDup){
-            out.println("<table>");
-            out.println("<tr><th>Class file</th><th>No. of times repeated</th></tr>");
             for(Map.Entry<String,ArrayList<JarData>> en : jardata.getDuplicates().entrySet() ){
                 if(en.getValue().size()>1){
                     JSONObject inner=new JSONObject();
-                    out.println("<tr>\n<td><button onclick=\"goto('duplicate','submitdup','"+en.getKey()+"')\" class='cmds'>"+en.getKey()+"</button></td>\n"
-                            + "<td>"+en.getValue().size()+"</td>\n</tr>");
                     inner.put("Class File", en.getKey());
                     inner.put("No of times",en.getValue().size());
-                    arr.add(inner);
+                    arrd.add(inner);
                 }
             }
-            out.println("</table>");
-            outer.put("Duplicate Listing", arr);
+            outerd.put("Duplicate Listing", arrd);
             file=new FileWriter(filename);
-            file.write(outer.toJSONString());
+            file.write(outerd.toJSONString());
             file.close();
             }else{
                 out.println("<p> No Duplicate classes found </p>");
@@ -106,31 +88,22 @@
             </div>
             <div style="float: left;">
             <%
-            out.println("<h1>Anonymous classes</h1>");
+            JSONArray arra=new JSONArray();
             if(!jardata.getAnonymous().isEmpty()){
-                outer.clear();
-                arr.clear();
+                JSONObject outera=new JSONObject();
                 filename=nfilepath+"anonymous.json";
-                out.println("<table>");
-                out.println("<tr><th>Class file</th><th>No. of anonymous classes</th></tr>");
-                out.println("<a href=\"JSON files/anonymous.json\" style='top:60px;' download>Download JSON file</a><br><br>");
                 for(Map.Entry<String,Map<String,Integer>> en : jardata.getAnonymous().entrySet() ){
                     if(en.getValue().size()>0){
                         JSONObject inner=new JSONObject();
-                        out.println("<tr>\n<td><button onclick=\"goto('anonymous','submitano','"+en.getKey()+"')\" class='cmds'>"+en.getKey()+"</button></td>\n"
-                                + "<td>"+en.getValue().size()+"</td>\n</tr>");
                         inner.put("Class File", en.getKey());
                         inner.put("No of classes",en.getValue().size());
-                        arr.add(inner);
+                        arra.add(inner);
                     }
                 }
-                out.println("</table>");
-                outer.put("Anonymous Listing", arr);
+                outera.put("Anonymous Listing", arra);
                 file=new FileWriter(filename);
-                file.write(outer.toJSONString());
+                file.write(outera.toJSONString());
                 file.close();
-            }else{
-                out.println("<p> No anonymous classes found </p>");
             }
         %>
             </div>
@@ -146,5 +119,70 @@
             <input type="text" name="folder" id="folder" hidden/>
             <input type="submit" id="submitfold" hidden/>
         </form>
+            <script>
+    	$(function(){
+    	$("#fol").jqGrid({
+    		colModel:[{name:"Path",label:"Path",width:500},
+    			{name:"No. of Files",label:"No. of Files",sorttype:"number"}],
+    		data:<% out.print(arrf.toJSONString()); %>,
+    		idprefix:"a1_",
+    		pager:true,
+    		rowNum:5,
+    		rownumbers:true,
+    		caption:"Packages",
+    		viewrecords:true,
+                sortorder:"desc",
+                sortname:"No. of Files",
+                subGrid:true,
+                subGridOptions:{
+                    "reloadOnExpand":true,
+                    "selectOnExpand":true
+                }
+    	});
+    });
+    $(function(){
+    	$("#dup").jqGrid({
+    		colModel:[{name:"Class File",label:"Class File",width:500},
+    			{name:"No of times",label:"No of times",sorttype:"number"}],
+    		data:<% out.print(arrd.toJSONString()); %>,
+    		idprefix:"d1_",
+    		pager:true,
+    		rowNum:5,
+    		rownumbers:true,
+    		caption:"Duplicate Classes",
+    		viewrecords:true,
+                sortorder:"desc",
+                sortname:"No of times",
+                subGrid:true,
+                subGridOptions:{
+                    "reloadOnExpand":true,
+                    "selectOnExpand":true
+                }
+    	});
+    });
+    $(function(){
+    	$("#ano").jqGrid({
+    		colModel:[{name:"Class File",label:"Class File",width:500},
+    			{name:"No of classes",label:"No of classes",sorttype:"number"}],
+    		data:<% out.print(arra.toJSONString()); %>,
+    		idprefix:"f1_",
+    		pager:true,
+    		rowNum:5,
+    		rownumbers:true,
+    		caption:"Anonymous Classes",
+    		viewrecords:true,
+                sortorder:"desc",
+                sortname:"No of classes",
+                subGrid:true,
+                subGridOptions:{
+                    "reloadOnExpand":true,
+                    "selectOnExpand":true
+                }
+    	});
+    });
+    </script>
+    <table id="dup"></table><br>
+    <table id="ano"></table><br>
+    <table id="fol"></table><br>
     </body>
 </html>
