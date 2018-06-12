@@ -274,7 +274,6 @@
         out.println("<table id='dup'></table><br>");
         out.println("<table id='ano'></table><br>");
         out.println("<table id='fol'></table><br>");
-        out.println("<h1>"+jardata.findPairJars().toJSONString()+"</h1>");
     }%>
     </body>
 </html>
