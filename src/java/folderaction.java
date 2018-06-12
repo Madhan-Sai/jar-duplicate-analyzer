@@ -91,10 +91,10 @@ public class folderaction extends HttpServlet {
                             JarFile jar=new JarFile(fpath);String jarname;
                             Enumeration<JarEntry> enu=jar.entries();
                             while(enu.hasMoreElements()){
-                                if(fpath.lastIndexOf("/")!=-1)
+                                /*if(fpath.lastIndexOf("/")!=-1)
                                     jarname=fpath.substring(fpath.lastIndexOf("/"));
-                                else
-                                    jarname=fpath;
+                                else*/
+                                    jarname=fpath.substring(fpath.indexOf(name));
                                 JarData djar=null;
                                 JarEntry jarContent=enu.nextElement();
                                 djar=new JarData(jarContent.getName(),jarContent.getSize(),new Date(jarContent.getTime()),jarname);
@@ -105,7 +105,7 @@ public class folderaction extends HttpServlet {
                     }
                     if(jardata!=null){
                         request.getSession().setAttribute("jardata", jardata);
-                        response.sendRedirect("listing.jsp");
+                        response.sendRedirect("index.jsp");
                     }else{
                         HttpSession session=request.getSession();
                         session.setAttribute("error", "This folder doesn't have any jar files");

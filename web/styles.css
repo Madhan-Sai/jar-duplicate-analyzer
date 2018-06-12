@@ -13,18 +13,8 @@ and open the template in the editor.
     display:none;
     align-self: center;
 }
-table, td, th{
-    border: 1px solid black;
-}
 .cmds{
     width:100%;
     border: none;
     background: none;
-}
-a{
-    -webkit-appearance: button;
-    -moz-appearance: button ;
-    appearance: button;
-    text-decoration: none;
-    color:initial;
 }

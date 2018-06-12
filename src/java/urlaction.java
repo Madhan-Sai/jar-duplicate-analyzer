@@ -68,10 +68,10 @@ public class urlaction extends HttpServlet {
             //out.println("<p>"+link+"</p>");
             if(filename.endsWith(".zip")){
                 out.println("<p>"+fpath+"</p>");
-                unzipAndStore(request,response,fpath,fpath+filename);
+                unzipAndStore(request,response,fpath,fpath+filename,filename);
             }
             else if(filename.endsWith(".jar")){
-                extractJar(request,response,fpath);
+                extractJar(request,response,fpath,filename);
             }
             out.println("</body>");
             out.println("</html>");                    
@@ -116,7 +116,7 @@ public class urlaction extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-     private void unzipAndStore(HttpServletRequest request,HttpServletResponse response,String src, String dest) {
+     private void unzipAndStore(HttpServletRequest request,HttpServletResponse response,String src, String dest,String name) {
         String data = null;
         JarParser parse=new JarParser();
         byte[]buffer=new byte[1024];
@@ -139,10 +139,10 @@ public class urlaction extends HttpServlet {
                     JarFile jar=new JarFile(fpath);String jarname;
                     Enumeration<JarEntry> jarentries=jar.entries();
                     while(jarentries.hasMoreElements()){
-                        if(fpath.lastIndexOf("/")!=-1)
+                        /*if(fpath.lastIndexOf("/")!=-1)
                             jarname=fpath.substring(fpath.lastIndexOf("/"));
-                        else
-                            jarname=fpath;
+                        else*/
+                            jarname=fpath.substring(fpath.indexOf(name));
                         JarData djar=null;
                         JarEntry content=jarentries.nextElement();
                         djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);
@@ -162,7 +162,7 @@ public class urlaction extends HttpServlet {
             //extractJar(request,response);
             if(parse!=null){
                 request.getSession().setAttribute("jardata",parse);
-                response.sendRedirect("listing.jsp");
+                response.sendRedirect("index.jsp");
             }
             else{
                 request.getSession().setAttribute("error","No jar file in this folder");
@@ -175,15 +175,15 @@ public class urlaction extends HttpServlet {
         File del=new File(src);
         del.delete();
     }
-     private void extractJar(HttpServletRequest request,HttpServletResponse response,String source) throws IOException{
+     private void extractJar(HttpServletRequest request,HttpServletResponse response,String source,String name) throws IOException{
             JarParser parse=new JarParser();
             JarFile jar=new JarFile(source);String jarname;
             Enumeration<JarEntry> jarentries=jar.entries();
             while(jarentries.hasMoreElements()){
-                if(source.lastIndexOf("/")!=-1)
+                /*if(source.lastIndexOf("/")!=-1)
                     jarname=source.substring(source.lastIndexOf("/"));
-                else
-                    jarname=source;
+                else*/
+                    jarname=source.substring(source.indexOf(name));
                 JarData djar=null;
                 JarEntry content=jarentries.nextElement();
                 djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);
@@ -191,7 +191,7 @@ public class urlaction extends HttpServlet {
             }
             if(parse!=null){
                 request.getSession().setAttribute("jardata",parse);
-                response.sendRedirect("listing.jsp");
+                response.sendRedirect("index.jsp");
             }
             else{
                 request.getSession().setAttribute("error","No jar file in this folder");

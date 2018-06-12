@@ -194,11 +194,11 @@ public class zipaction extends HttpServlet {
                     JarFile jar=new JarFile(fpath);String jarname;
                     Enumeration<JarEntry> jarentries=jar.entries();
                     while(jarentries.hasMoreElements()){
-                        if(fpath.contains("/")){
+                        /*if(fpath.contains("/")){
                             jarname=fpath.substring(fpath.lastIndexOf("/"));
-                        }else{
-                            jarname=fpath;
-                        }
+                        }else{*/
+                            jarname=fpath.substring(fpath.indexOf(filename));
+                        //}
                         JarData djar=null;
                         JarEntry content=jarentries.nextElement();
                         djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);
@@ -218,7 +218,7 @@ public class zipaction extends HttpServlet {
             //extractJar(request,response);
             if(parse!=null){
                 request.getSession().setAttribute("jardata",parse);
-                response.sendRedirect("listing.jsp");
+                response.sendRedirect("index.jsp");
             }
             else{
                 request.getSession().setAttribute("error","No jar file in this folder");
