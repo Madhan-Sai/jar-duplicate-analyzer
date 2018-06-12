@@ -39,7 +39,7 @@ public class JarParser {
     }
     
     public void findDuplicates(){
-        duplicates=new HashMap<String,ArrayList<JarData>>();
+        duplicates=new HashMap<>();
         for(JarData jar:data){
             if(!jar.getPath().endsWith("/")){
                 String className=jar.getPath().substring(jar.getPath().lastIndexOf("/")+1);
@@ -59,7 +59,7 @@ public class JarParser {
     }
     
     public void findAnonymous(){
-        anonymous=new HashMap<String,Map<String,Integer>>();
+        anonymous=new HashMap<>();
         for(JarData jar:data){
             if(!jar.getPath().endsWith("/")){
                 String className=jar.getPath().substring(jar.getPath().lastIndexOf("/")+1);
@@ -143,7 +143,7 @@ public class JarParser {
     }
     
     public JSONArray returnFolders(String RFolder){
-        Map<String,Integer> dup=new HashMap<String,Integer>();
+        Map<String,Integer> dup=new HashMap<>();
         JSONObject dupfiles=new JSONObject();
         JSONArray foldercount=new JSONArray();
         dup=folders.get(RFolder);
@@ -161,7 +161,7 @@ public class JarParser {
     
     public JSONArray returnAnonymous(String RClass){
         JSONObject anofiles=new JSONObject();
-        Map<String,Integer> ano=new HashMap<String,Integer>();
+        Map<String,Integer> ano=new HashMap<>();
         JSONArray anocount=new JSONArray();
         ano=anonymous.get(RClass);
         if(ano!=null){
@@ -178,13 +178,13 @@ public class JarParser {
     
     public JSONArray returnDuplicates(String RClass){
         JSONObject dupfile=new JSONObject();
-        List<JarData> dup=new ArrayList<JarData>();
+        List<JarData> dup=new ArrayList<>();
         JSONArray duparray=new JSONArray();
         dup=duplicates.get(RClass);
         for(JarData jar:dup){
             JSONObject inobj=new JSONObject();
-            inobj.put("FilePath",jar.fileSize);
-            inobj.put("Last Modified Date:",jar.lastModified);
+            inobj.put("name",jar.getFilename());
+            inobj.put("FilePath",jar.getPath());
             inobj.put("Size",jar.fileSize);
             duparray.add(inobj);
         }

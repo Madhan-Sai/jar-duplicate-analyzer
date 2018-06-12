@@ -26,7 +26,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.4/css/ui.jqgrid.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.4/jquery.jqgrid.min.js"></script>      
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.4/jquery.jqgrid.min.js"></script>
+    <style>
+        .ref{
+        -webkit-appearance: button;
+        -moz-appearance: button ;
+        appearance: button;
+        text-decoration: none;
+        color:initial;
+        position:fixed;
+        top:10px;
+        right:100px;
+        }
+    </style>
         <% 
             JarParser jardata= (JarParser) request.getSession().getAttribute("jardata");
             String path;
@@ -105,19 +117,24 @@
             }
         %>
             </div>
-        <form method="post" action="result.jsp">
-            <input type="text" name="duplicate" id="duplicate" hidden/>
-            <input type="submit" id="submitdup" hidden/>
-        </form>
-        <form method="post" action="result.jsp">
-            <input type="text" name="anonymous" id="anonymous" hidden/>
-            <input type="submit" id="submitano" hidden/>
-        </form>
-        <form method="post" action="result.jsp">
-            <input type="text" name="folder" id="folder" hidden/>
-            <input type="submit" id="submitfold" hidden/>
-        </form>
             <script>
+                var inneranonymous=[];
+                var innerduplicates=[];
+                var innerfolders=[];
+                <% 
+                for(int i=0;i<arra.size();i++){
+                    JSONObject ob= (JSONObject) arra.get(i);
+                    out.print("inneranonymous['"+ob.get("Class File").toString()+"']="+jardata.returnAnonymous(ob.get("Class File").toString()).toJSONString()+";\n");
+                }
+                for(int i=0;i<arrd.size();i++){
+                    JSONObject ob= (JSONObject) arrd.get(i);
+                    out.print("innerduplicates['"+ob.get("Class File").toString()+"']="+jardata.returnDuplicates(ob.get("Class File").toString()).toJSONString()+";\n");
+                }
+                for(int i=0;i<arrf.size();i++){
+                    JSONObject ob= (JSONObject) arrf.get(i);
+                    out.print("innerfolders['"+ob.get("Path").toString()+"']="+jardata.returnFolders(ob.get("Path").toString()).toJSONString()+";\n");
+                }
+                %>
     	$(function(){
     	$("#fol").jqGrid({
     		colModel:[{name:"Path",label:"Path",width:500},
@@ -137,8 +154,21 @@
                     "selectOnExpand":true
                 },
                 subGridRowExpanded: function(subgrid_id,row_id){
-                    data=jQuery("#fol").getRowData(row_id);
-                    alert(subgrid_id+" "+row_id+" "+data["Path"]);
+                    var data=jQuery("#fol").getRowData(row_id);
+                    var subgrid_table_id, pager_id;
+                    subgrid_table_id=subgrid_id+"_t";
+                    pager_id="p_"+subgrid_table_id;
+                    $("#"+subgrid_id).html("<table id="+subgrid_table_id+" class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>");
+                    $("#"+subgrid_table_id).jqGrid({
+                        colModel:[
+                            {name:"Folder-Name",label:"Folder-Name",width:300},
+                            {name:"Count", label:"Count"}],
+                        data:innerfolders[data['Path']],
+                        pager:true,
+                        rowNum:5,
+                        viewrecords:true,
+                        caption:"Classes inside "+data['Path']  
+                    });
                 }
     	});
     });
@@ -161,8 +191,21 @@
                     "selectOnExpand":true
                 },
                 subGridRowExpanded: function(subgrid_id,row_id){
-                    data=jQuery("#dup").getRowData(row_id);
-                    alert(subgrid_id+" "+row_id+" "+data["Class File"]);
+                    var data=jQuery("#dup").getRowData(row_id);
+                    var subgrid_table_id, pager_id;
+                    subgrid_table_id=subgrid_id+"_t";
+                    pager_id="p_"+subgrid_table_id;
+                    $("#"+subgrid_id).html("<table id="+subgrid_table_id+" class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>");
+                    $("#"+subgrid_table_id).jqGrid({
+                        colModel:[
+                            {name:"name",label:"name",width:200},
+                            {name:"FilePath", label:"FilePath",width:300}],
+                        data:innerduplicates[data['Class File']],
+                        pager:true,
+                        rowNum:5,
+                        viewrecords:true,
+                        caption:"Classes inside "+data['Class File']  
+                    });
                 }
     	});
     });
@@ -185,12 +228,26 @@
                     "selectOnExpand":true
                 },
                 subGridRowExpanded: function(subgrid_id,row_id){
-                    data=jQuery("#ano").getRowData(row_id);
-                    alert(data["Class File"]);
+                    var data=jQuery("#ano").getRowData(row_id);
+                    var subgrid_table_id, pager_id;
+                    subgrid_table_id=subgrid_id+"_t";
+                    pager_id="p_"+subgrid_table_id;
+                    $("#"+subgrid_id).html("<table id="+subgrid_table_id+" class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>");
+                    $("#"+subgrid_table_id).jqGrid({
+                        colModel:[
+                            {name:"Anonymous-Name",label:"Anonymous-Name",width:300},
+                            {name:"Count", label:"Count"}],
+                        data:inneranonymous[data['Class File']],
+                        pager:true,
+                        rowNum:5,
+                        viewrecords:true,
+                        caption:"Classes inside "+data['Class File']  
+                    });
                 }
     	});
     });
     </script>
+    <a href="index.jsp" class="ref">&lt;&lt;Back</a>
     <table id="dup"></table><br>
     <table id="ano"></table><br>
     <table id="fol"></table><br>
