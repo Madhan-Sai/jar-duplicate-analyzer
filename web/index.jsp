@@ -253,7 +253,8 @@
                     $("#"+subgrid_table_id).jqGrid({
                         colModel:[
                             {name:"name",label:"name",width:300},
-                            {name:"FilePath", label:"FilePath",width:300}],
+                            {name:"FilePath", label:"FilePath",width:250},
+                            {name:"Size",label:"Size",width:50}],
                         data:innerduplicates[data['Class File']],
                         pager:true,
                         rowNum:5,
@@ -273,6 +274,7 @@
         out.println("<table id='dup'></table><br>");
         out.println("<table id='ano'></table><br>");
         out.println("<table id='fol'></table><br>");
+        out.println("<h1>"+jardata.findPairJars().toJSONString()+"</h1>");
     }%>
     </body>
 </html>
