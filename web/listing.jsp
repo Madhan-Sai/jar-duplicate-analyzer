@@ -82,8 +82,6 @@
             file=new FileWriter(filename);
             file.write(outerd.toJSONString());
             file.close();
-            }else{
-                out.println("<p> No Duplicate classes found </p>");
             }%>
             </div>
             <div style="float: left;">
