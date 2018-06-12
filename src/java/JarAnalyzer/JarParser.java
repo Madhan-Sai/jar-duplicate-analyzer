@@ -142,7 +142,7 @@ public class JarParser {
         return folders.get(fname);
     }
     
-    public JSONObject returnFolders(String RFolder){
+    public JSONArray returnFolders(String RFolder){
         Map<String,Integer> dup=new HashMap<String,Integer>();
         JSONObject dupfiles=new JSONObject();
         JSONArray foldercount=new JSONArray();
@@ -155,12 +155,11 @@ public class JarParser {
                 foldercount.add(inobj);
             }
         dupfiles.put("Folder-Path  --  Count",foldercount);
-        System.out.println(dupfiles.toJSONString());
         }
-        return dupfiles;
+        return foldercount;
     }
     
-    public JSONObject returnAnonymous(String RClass){
+    public JSONArray returnAnonymous(String RClass){
         JSONObject anofiles=new JSONObject();
         Map<String,Integer> ano=new HashMap<String,Integer>();
         JSONArray anocount=new JSONArray();
@@ -173,12 +172,11 @@ public class JarParser {
             anocount.add(inobj);
             }
             anofiles.put("Anonymous-Class  --  Count",anocount);
-            System.out.println(anofiles.toJSONString());
         }
-        return anofiles;
+        return anocount;
     }
     
-    public JSONObject returnDuplicates(String RClass){
+    public JSONArray returnDuplicates(String RClass){
         JSONObject dupfile=new JSONObject();
         List<JarData> dup=new ArrayList<JarData>();
         JSONArray duparray=new JSONArray();
@@ -191,6 +189,6 @@ public class JarParser {
             duparray.add(inobj);
         }
         dupfile.put("Duplicate Class  --  Count",duparray);
-        return dupfile;
+        return duparray;
     }
 }

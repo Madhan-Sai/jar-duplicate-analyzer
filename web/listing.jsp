@@ -135,6 +135,10 @@
                 subGridOptions:{
                     "reloadOnExpand":true,
                     "selectOnExpand":true
+                },
+                subGridRowExpanded: function(subgrid_id,row_id){
+                    data=jQuery("#fol").getRowData(row_id);
+                    alert(subgrid_id+" "+row_id+" "+data["Path"]);
                 }
     	});
     });
@@ -155,6 +159,10 @@
                 subGridOptions:{
                     "reloadOnExpand":true,
                     "selectOnExpand":true
+                },
+                subGridRowExpanded: function(subgrid_id,row_id){
+                    data=jQuery("#dup").getRowData(row_id);
+                    alert(subgrid_id+" "+row_id+" "+data["Class File"]);
                 }
     	});
     });
@@ -175,6 +183,10 @@
                 subGridOptions:{
                     "reloadOnExpand":true,
                     "selectOnExpand":true
+                },
+                subGridRowExpanded: function(subgrid_id,row_id){
+                    data=jQuery("#ano").getRowData(row_id);
+                    alert(data["Class File"]);
                 }
     	});
     });
