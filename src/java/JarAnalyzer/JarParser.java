@@ -17,16 +17,16 @@ import org.json.simple.JSONObject;
  * @author Administrator
  */
 public class JarParser {
-    private List<JarData> data;
+    private final List<JarData> data;
     private Map<String,ArrayList<JarData>> duplicates;
     private Map<String,Map<String,Integer>> anonymous;
-    private Map<String,Map<String,Integer>> folders;
+    private final Map<String,Map<String,Integer>> folders;
 
     public JarParser() {
-        data=new ArrayList<JarData>();
+        data=new ArrayList<>();
         duplicates=null;
         anonymous=null;
-        folders=new HashMap<String,Map<String,Integer>>();
+        folders=new HashMap<>();
     }
 
     public List<JarData> getData() {
@@ -78,7 +78,7 @@ public class JarParser {
                             }
                             anonymous.put(mainClass, li);
                         }else{
-                            Map<String,Integer> li=new HashMap<String,Integer>();
+                            Map<String,Integer> li=new HashMap<>();
                             li.put(anonymousClass,1);
                             anonymous.put(mainClass,li);
                         }
@@ -102,7 +102,7 @@ public class JarParser {
     }
     
     public void addFolders(JarData jar){
-        Map<String,Integer> fol=new HashMap<String,Integer>();
+        Map<String,Integer> fol=new HashMap<>();
         if(! jar.path.substring(jar.path.lastIndexOf("/")+1).equals("")){
             String jpath=jar.path.substring(0,jar.path.lastIndexOf("/")+1);
             String fname=jar.path.substring(jpath.lastIndexOf("/")+1);

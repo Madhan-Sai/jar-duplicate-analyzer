@@ -252,7 +252,7 @@
                     $("#"+subgrid_id).html("<table id="+subgrid_table_id+" class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>");
                     $("#"+subgrid_table_id).jqGrid({
                         colModel:[
-                            {name:"name",label:"name",width:200},
+                            {name:"name",label:"name",width:300},
                             {name:"FilePath", label:"FilePath",width:300}],
                         data:innerduplicates[data['Class File']],
                         pager:true,
