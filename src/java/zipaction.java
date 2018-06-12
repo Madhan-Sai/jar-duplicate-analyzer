@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -186,27 +185,26 @@ public class zipaction extends HttpServlet {
                     fpath=dest+File.separator+filename;
                     File newFile = new File(fpath);
                     new File(newFile.getParent()).mkdirs();
-                    FileOutputStream fos = new FileOutputStream(newFile);
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
-                    }
-                    JarFile jar=new JarFile(fpath);String jarname;
-                    Enumeration<JarEntry> jarentries=jar.entries();
-                    while(jarentries.hasMoreElements()){
-                        /*if(fpath.contains("/")){
+                    try (FileOutputStream fos = new FileOutputStream(newFile)) {
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                        JarFile jar=new JarFile(fpath);String jarname;
+                        Enumeration<JarEntry> jarentries=jar.entries();
+                        while(jarentries.hasMoreElements()){
+                            /*if(fpath.contains("/")){
                             jarname=fpath.substring(fpath.lastIndexOf("/"));
-                        }else{*/
+                            }else{*/
                             jarname=fpath.substring(fpath.indexOf(filename));
-                        //}
-                        JarData djar=null;
-                        JarEntry content=jarentries.nextElement();
-                        djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);
-                        parse.addData(djar);
-                        parse.addFolders(djar);
+                            //}
+                            JarData djar=null;
+                            JarEntry content=jarentries.nextElement();
+                            djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);
+                            parse.addData(djar);
+                            parse.addFolders(djar);
+                        }
                     }
-                    
-                     fos.close();
                      
                 }
                 //close this ZipEntry

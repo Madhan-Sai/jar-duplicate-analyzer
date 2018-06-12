@@ -78,7 +78,7 @@ public class folderaction extends HttpServlet {
                         FileItem fi=(FileItem) i.next();
                         String fieldName=fi.getFieldName();
                         String name=fi.getName();
-                        name.replace("/","\\");
+                        name = name.replace("/","\\");
                         if(name.endsWith(".jar")){
                             if(name.lastIndexOf("//")>=0){
                                 fpath=filepath+name.substring(name.lastIndexOf("//"));
@@ -113,7 +113,6 @@ public class folderaction extends HttpServlet {
                     }
                     return;
                 }catch(Exception e){
-                    e.printStackTrace();
                 }
             }
             out.println("</body>");

@@ -131,26 +131,25 @@ public class urlaction extends HttpServlet {
                     fpath=dest+File.separator+filename;
                     File newFile = new File(fpath);
                     new File(newFile.getParent()).mkdirs();
-                    FileOutputStream fos = new FileOutputStream(newFile);
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
-                    }
-                    JarFile jar=new JarFile(fpath);String jarname;
-                    Enumeration<JarEntry> jarentries=jar.entries();
-                    while(jarentries.hasMoreElements()){
-                        /*if(fpath.lastIndexOf("/")!=-1)
+                    try (FileOutputStream fos = new FileOutputStream(newFile)) {
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                        JarFile jar=new JarFile(fpath);String jarname;
+                        Enumeration<JarEntry> jarentries=jar.entries();
+                        while(jarentries.hasMoreElements()){
+                            /*if(fpath.lastIndexOf("/")!=-1)
                             jarname=fpath.substring(fpath.lastIndexOf("/"));
-                        else*/
+                            else*/
                             jarname=fpath.substring(fpath.indexOf(name));
-                        JarData djar=null;
-                        JarEntry content=jarentries.nextElement();
-                        djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);
-                        parse.addData(djar);
-                        parse.addFolders(djar);
+                            JarData djar=null;
+                            JarEntry content=jarentries.nextElement();
+                            djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);
+                            parse.addData(djar);
+                            parse.addFolders(djar);
+                        }
                     }
-                    
-                     fos.close();
                      
                 }
                 //close this ZipEntry
