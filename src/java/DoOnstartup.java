@@ -76,7 +76,7 @@ class deleteFolders{
                 }
             }
         };
-        final ScheduledFuture<?> delhandle=sec.scheduleAtFixedRate(deleteF, 1, 0, TimeUnit.MINUTES);
+        final ScheduledFuture<?> delhandle=sec.scheduleAtFixedRate(deleteF, 10, 10, TimeUnit.MINUTES);
         sec.schedule(new Runnable(){
             @Override
             public void run() {
