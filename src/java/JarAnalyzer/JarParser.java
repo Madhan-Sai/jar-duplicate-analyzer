@@ -197,7 +197,6 @@ public class JarParser {
                 int count=1;
                 for(JarData jr:d){
                     obj.put("jar "+count, jr.getFilename());
-                    System.out.println(jr.getFilename());
                     count++;
                 }
                 if(!pair.contains(obj))

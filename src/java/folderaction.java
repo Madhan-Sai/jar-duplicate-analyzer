@@ -64,7 +64,7 @@ public class folderaction extends HttpServlet {
                 DiskFileItemFactory df=new DiskFileItemFactory();
                 File tempdir=new File(dirp+"\\webapps\\"+new File(getServletContext().getRealPath("/")).getName()+"\\temp");
                 if(!tempdir.exists())
-                    tempdir.mkdirs();  
+                    tempdir.mkdirs();
                 File dest=new File(filepath);
                 if(!dest.exists())
                     dest.mkdirs();
@@ -102,6 +102,7 @@ public class folderaction extends HttpServlet {
                                 jardata.addData(djar);
                                 jardata.addFolders(djar);
                             }
+                            
                         }
                     }
                     if(jardata!=null){

@@ -62,26 +62,22 @@ class deleteFolders{
             public void run() {
                 ServletContext sc=sce.getServletContext();
                 String filepath = sc.getInitParameter("destLocation");
-                String filep = sc.getInitParameter("JsonLocation");
                 String dirp=System.getProperty("user.dir");
                 filepath=dirp+filepath;
-                filep=dirp+filep;
                 File f=new File(filepath);
-                File fp=new File(filep);
                 try {
-                    FileUtils.deleteDirectory(f);
-                    FileUtils.deleteDirectory(fp);
+                    FileUtils.cleanDirectory(f);
                 } catch (IOException ex) {
                 Logger.getLogger(DoOnstartup.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         };
-        final ScheduledFuture<?> delhandle=sec.scheduleAtFixedRate(deleteF, 10, 10, TimeUnit.MINUTES);
+        final ScheduledFuture<?> delhandle=sec.scheduleAtFixedRate(deleteF, 0, 1, TimeUnit.DAYS);
         sec.schedule(new Runnable(){
             @Override
             public void run() {
                 delhandle.cancel(true);
             }
-        }, 60*60, TimeUnit.SECONDS);
+        }, 1, TimeUnit.DAYS);
     }
 }
