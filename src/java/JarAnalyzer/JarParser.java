@@ -190,6 +190,40 @@ public class JarParser {
     
     public JSONArray findPairJars(){
         JSONArray pair=new JSONArray();
+        for(Map.Entry<String,ArrayList<JarData>> en:duplicates.entrySet()){
+            List<JarData> d=en.getValue();
+            if(d.size()>1){
+                JSONObject obj=new JSONObject();
+                int count=1;
+                for(JarData jr:d){
+                    obj.put("jar "+count, jr.getFilename());
+                    System.out.println(jr.getFilename());
+                    count++;
+                }
+                if(!pair.contains(obj))
+                    pair.add(obj);
+            }
+        }
         return pair;
+    }
+    
+    public JSONArray findFiles(String jar1,String jar2){
+        JSONArray files=new JSONArray();
+        for(Map.Entry<String,ArrayList<JarData>> en:duplicates.entrySet()){
+            List<JarData> d=en.getValue();
+            if(d.size()>1){
+                int count=0;
+                JSONObject obj=new JSONObject();
+                for(JarData js:d){
+                    if(js.getFilename().equals(jar1)) count+=1;
+                    if(js.getFilename().equals(jar2)) count+=1;
+                }
+                if(count==2){
+                    obj.put("filename",en.getKey());
+                    if(!files.contains(obj)) files.add(obj);
+                }
+            }
+        }
+        return files;
     }
 }

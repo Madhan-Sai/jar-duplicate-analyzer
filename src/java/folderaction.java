@@ -95,6 +95,7 @@ public class folderaction extends HttpServlet {
                                     jarname=fpath.substring(fpath.lastIndexOf("/"));
                                 else*/
                                     jarname=fpath.substring(fpath.indexOf(name));
+                                    jarname=jarname.replace("\\", "/");
                                 JarData djar=null;
                                 JarEntry jarContent=enu.nextElement();
                                 djar=new JarData(jarContent.getName(),jarContent.getSize(),new Date(jarContent.getTime()),jarname);

@@ -60,20 +60,13 @@
             </form>
         </div><br><br>
         <% request.getSession().removeAttribute("error"); 
-        JSONArray arrd=null,arrf=null,arra=null;
+        JSONArray arrd=null,arrf=null,arra=null,jars=null;
         JarParser jardata=null;
         %>
         <% if(request.getSession().getAttribute("jardata")!=null){
             jardata= (JarParser) request.getSession().getAttribute("jardata");
             String path;
-            ServletConfig sc=this.getServletConfig();String fname="";
-            String filepath = "\\webapps\\JARAnalyzer\\JSON files\\";
-            String dirp=System.getProperty("user.dir");
-            String nfilepath=dirp+filepath;
-            File dir=new File(nfilepath);
-            if(!dir.exists()) dir.mkdir();
             arrf=new JSONArray();
-            String filename=nfilepath+"folders.json";
             for(Map.Entry<String,Map<String,Integer>> en: jardata.getFolders().entrySet()){
                 JSONObject inner=new JSONObject();
                 path=en.getKey();
@@ -86,7 +79,6 @@
             }
             
             arrd=new JSONArray();
-            filename=nfilepath+"duplicates.json";
             boolean isDup=false;
             for(Map.Entry<String,ArrayList<JarData>> en : jardata.getDuplicates().entrySet() ){
                 if(en.getValue().size()>1){
@@ -108,7 +100,6 @@
             arra=new JSONArray();
             if(!jardata.getAnonymous().isEmpty()){
                 JSONObject outera=new JSONObject();
-                filename=nfilepath+"anonymous.json";
                 for(Map.Entry<String,Map<String,Integer>> en : jardata.getAnonymous().entrySet() ){
                     if(en.getValue().size()>0){
                         JSONObject inner=new JSONObject();
@@ -124,19 +115,25 @@
                 var inneranonymous=[];
                 var innerduplicates=[];
                 var innerfolders=[];
+                var innerclasses=[];
                 <% 
                     if(jardata!=null){
                 for(int i=0;i<arra.size();i++){
                     JSONObject ob= (JSONObject) arra.get(i);
-                    out.print("inneranonymous['"+ob.get("Class File").toString()+"']="+jardata.returnAnonymous(ob.get("Class File").toString()).toJSONString()+";\n");
+                    out.println("inneranonymous['"+ob.get("Class File").toString()+"']="+jardata.returnAnonymous(ob.get("Class File").toString()).toJSONString()+";\n");
                 }
                 for(int i=0;i<arrd.size();i++){
                     JSONObject ob= (JSONObject) arrd.get(i);
-                    out.print("innerduplicates['"+ob.get("Class File").toString()+"']="+jardata.returnDuplicates(ob.get("Class File").toString()).toJSONString()+";\n");
+                    out.println("innerduplicates['"+ob.get("Class File").toString()+"']="+jardata.returnDuplicates(ob.get("Class File").toString()).toJSONString()+";\n");
                 }
                 for(int i=0;i<arrf.size();i++){
                     JSONObject ob= (JSONObject) arrf.get(i);
-                    out.print("innerfolders['"+ob.get("Path").toString()+"']="+jardata.returnFolders(ob.get("Path").toString()).toJSONString()+";\n");
+                    out.println("innerfolders['"+ob.get("Path").toString()+"']="+jardata.returnFolders(ob.get("Path").toString()).toJSONString()+";\n");
+                }
+                jars=jardata.findPairJars();
+                for(int i=0;i<jars.size();i++){
+                    JSONObject ob= (JSONObject) jars.get(i);
+                    out.println("innerclasses['"+ob.get("jar 1").toString()+"-"+ob.get("jar 2").toString()+"']="+jardata.findFiles(ob.get("jar 1").toString(), ob.get("jar 2").toString()).toJSONString()+";\n");
                 }
                     }
                 %>
@@ -269,9 +266,50 @@
                 }
     	}).jqGrid("filterToolbar",{defaultSearch:"cn"});
     });
+    $(function(){
+    	$("#pairs").jqGrid({
+    		colModel:[{name:"jar 1",label:"Jar 1",width:300},
+    			{name:"jar 2",label:"Jar 2",width:300}],
+    		data:<% if(jardata!=null) out.print(jars.toJSONString()); %>,
+    		idprefix:"j1_",
+    		pager:true,
+    		rowNum:5,
+    		rownumbers:true,
+    		caption:"Duplicate Classes Comparision with jar file",
+    		viewrecords:true,
+                subGrid:true,
+                subGridOptions:{
+                    "reloadOnExpand":true,
+                    "selectOnExpand":true
+                },
+                subGridRowExpanded: function(subgrid_id,row_id){
+                    var data=jQuery("#pairs").getRowData(row_id);
+                    var subgrid_table_id, pager_id;
+                    subgrid_table_id=subgrid_id+"_t";
+                    pager_id="p_"+subgrid_table_id;
+                    var dat=data['jar 1']+"-"+data['jar 2'];
+                    $("#"+subgrid_id).html("<table id="+subgrid_table_id+" class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>");
+                    $("#"+subgrid_table_id).jqGrid({
+                        colModel:[
+                            {name:"filename",label:"File Name",width:500}],
+                        data:innerclasses[dat],
+                        pager:true,
+                        rowNum:5,
+                        viewrecords:true,
+                        headertitles:true,
+                        sortIconsBeforeText:true,
+                        searching:{ 
+                            defaultSearch:"cn"
+                        },
+                        caption:"Classes inside "+data['jar 1']+" and "+data["jar 2"]
+                    }).jqGrid("filterToolbar",{defaultSearch:"cn"});
+                }
+    	}).jqGrid("filterToolbar",{defaultSearch:"cn"});
+    });
     </script>
     <% if(jardata!=null){
         out.println("<table id='dup'></table><br>");
+        out.println("<table id='pairs'></table><br>");
         out.println("<table id='ano'></table><br>");
         out.println("<table id='fol'></table><br>");
     }%>

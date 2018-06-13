@@ -143,6 +143,7 @@ public class urlaction extends HttpServlet {
                             jarname=fpath.substring(fpath.lastIndexOf("/"));
                             else*/
                             jarname=fpath.substring(fpath.indexOf(name));
+                            jarname=jarname.replace("\\", "/");
                             JarData djar=null;
                             JarEntry content=jarentries.nextElement();
                             djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);
@@ -183,6 +184,7 @@ public class urlaction extends HttpServlet {
                     jarname=source.substring(source.lastIndexOf("/"));
                 else*/
                     jarname=source.substring(source.indexOf(name));
+                    jarname=jarname.replace("\\", "/");
                 JarData djar=null;
                 JarEntry content=jarentries.nextElement();
                 djar=new JarData(content.getName(),content.getSize(),new Date(content.getTime()),jarname);

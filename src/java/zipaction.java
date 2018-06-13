@@ -197,6 +197,7 @@ public class zipaction extends HttpServlet {
                             jarname=fpath.substring(fpath.lastIndexOf("/"));
                             }else{*/
                             jarname=fpath.substring(fpath.indexOf(filename));
+                            jarname=jarname.replace("\\", "/");
                             //}
                             JarData djar=null;
                             JarEntry content=jarentries.nextElement();
